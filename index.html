@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>INOVEX Warehouse System</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f2a44">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="INOVEX WMS">
+<style>
+  html,body{margin:0;min-height:100%;background:linear-gradient(160deg,#0f2a44,#173a5e);color:#fff;font:15px/1.5 Inter,'Segoe UI',Roboto,Arial,sans-serif}
+  body{display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px;box-sizing:border-box}
+  .card{background:#fff;color:#1b2733;border-radius:16px;padding:28px;max-width:380px;width:100%;box-shadow:0 20px 50px #0006}
+  img{width:84px;height:84px;border-radius:18px}
+  .brand{color:#f28c28;font-weight:700;letter-spacing:3px;font-size:12px;margin-top:12px}
+  h1{font-size:20px;margin:6px 0 4px}p{color:#6b7a8c;margin:0 0 16px;font-size:13.5px}
+  .btn{display:block;width:100%;box-sizing:border-box;margin-top:10px;padding:12px 16px;border-radius:9px;background:#f28c28;color:#fff;font-weight:600;text-decoration:none;border:0;font-size:15px;cursor:pointer}
+  .ghost{background:#0f2a44}
+  .small{font-size:12px;color:#8a97a8;margin-top:16px}.small a{color:#2b6cb0}
+  .spin{width:26px;height:26px;border:3px solid #e3e8ef;border-top-color:#f28c28;border-radius:50%;animation:sp .9s linear infinite;margin:18px auto 10px}
+  @keyframes sp{to{transform:rotate(360deg)}}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="card">
+  <img src="./icons/icon-192.png" alt="INOVEX WMS">
+  <div class="brand">INOVEX GROUP LLC</div>
+  <h1 id="t">Warehouse &amp; Inventory System</h1>
+  <p id="sub">Secure portal – authorised users only</p>
+  <div id="choose">
+    <a class="btn" id="staff" href="#">INOVEX staff (@inovex-group.com)</a>
+    <a class="btn ghost" id="guest" href="#">Invited user – e-mail &amp; password</a>
+  </div>
+  <div id="wait" hidden><div class="spin"></div><div id="msg">Opening…</div></div>
+  <p class="small"><span id="rem">Your choice is remembered on this device.</span> <a href="./?choose=1" id="chg">Change</a> · <a href="#" id="lang">العربية</a></p>
+</div>
+<script src="./config.js"></script>
+<script>
+(function () {
+  var C = window.WMS_CONFIG, q = new URLSearchParams(location.search), $ = function (i) { return document.getElementById(i); };
+  var get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
+  var AR = { t: 'نظام المستودعات والمخزون', sub: 'بوابة آمنة – للمستخدمين المصرّح لهم فقط', staff: 'موظفو إنوفكس (@inovex-group.com)', guest: 'مستخدم مدعو – البريد وكلمة المرور', msg: 'جارٍ الفتح…', rem: 'يُحفظ اختيارك على هذا الجهاز.', chg: 'تغيير', lang: 'English' };
+  var EN = {}; Object.keys(AR).forEach(function (k) { EN[k] = $(k).textContent; });
+  function lang(l) { var T = l === 'ar' ? AR : EN; document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'; Object.keys(T).forEach(function (k) { $(k).textContent = T[k]; }); set('wms-lang', l); }
+  lang(get('wms-lang') || (/^ar/i.test(navigator.language) ? 'ar' : 'en'));
+  $('lang').onclick = function (e) { e.preventDefault(); lang(document.documentElement.lang === 'ar' ? 'en' : 'ar'); };
+  function go(mode) { set('wms-mode', mode); $('choose').hidden = true; $('wait').hidden = false; location.replace(mode === 'staff' ? C.staffUrl + '?via=staff' : C.appUrl); }
+  $('staff').onclick = function (e) { e.preventDefault(); go('staff'); };
+  $('guest').onclick = function (e) { e.preventDefault(); go('guest'); };
+  var m = q.get('choose') ? null : get('wms-mode'); if (m === 'staff' || m === 'guest') go(m);
+})();
+</script>
+</body>
+</html>
