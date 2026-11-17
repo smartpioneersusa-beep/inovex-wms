@@ -37,14 +37,14 @@
     <a class="btn ghost" id="guest" href="#">Invited user – e-mail &amp; password</a>
   </div>
   <div id="wait" hidden><div class="spin"></div><div id="msg">Opening…</div></div>
-  <p class="small"><span id="rem">Your choice is remembered on this device.</span> <a href="./?choose=1" id="chg">Change</a> · <a href="#" id="lang">العربية</a></p>
+  <p class="small"><span id="rem">Choose how you sign in.</span><a href="#" id="chg" hidden></a> · <a href="#" id="lang">العربية</a></p>
 </div>
 <script src="./config.js"></script>
 <script>
 (function () {
   var C = window.WMS_CONFIG, q = new URLSearchParams(location.search), $ = function (i) { return document.getElementById(i); };
   var get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
-  var AR = { t: 'نظام المستودعات والمخزون', sub: 'بوابة آمنة – للمستخدمين المصرّح لهم فقط', staff: 'موظفو إنوفكس (@inovex-group.com)', guest: 'مستخدم مدعو – البريد وكلمة المرور', msg: 'جارٍ الفتح…', rem: 'يُحفظ اختيارك على هذا الجهاز.', chg: 'تغيير', lang: 'English' };
+  var AR = { t: 'نظام المستودعات والمخزون', sub: 'بوابة آمنة – للمستخدمين المصرّح لهم فقط', staff: 'موظفو إنوفكس (@inovex-group.com)', guest: 'مستخدم مدعو – البريد وكلمة المرور', msg: 'جارٍ الفتح…', rem: 'اختر طريقة الدخول.', chg: '', lang: 'English' };
   var EN = {}; Object.keys(AR).forEach(function (k) { EN[k] = $(k).textContent; });
   function lang(l) { var T = l === 'ar' ? AR : EN; document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'; Object.keys(T).forEach(function (k) { $(k).textContent = T[k]; }); set('wms-lang', l); }
   lang(get('wms-lang') || (/^ar/i.test(navigator.language) ? 'ar' : 'en'));
@@ -52,7 +52,7 @@
   function go(mode) { set('wms-mode', mode); $('choose').hidden = true; $('wait').hidden = false; location.replace(mode === 'staff' ? C.staffUrl + '?via=staff' : C.appUrl); }
   $('staff').onclick = function (e) { e.preventDefault(); go('staff'); };
   $('guest').onclick = function (e) { e.preventDefault(); go('guest'); };
-  var m = q.get('choose') ? null : get('wms-mode'); if (m === 'staff' || m === 'guest') go(m);
+  var m = get('wms-mode'); if (m === 'staff' || m === 'guest') $(m).style.outline = '3px solid #f28c28';  // remember last choice, but always let the user choose
 })();
 </script>
 </body>
